@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://andi:admin@cluster0-uxfva.mongodb.net/test?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://andi:admin@cluster0-uxfva.mongodb.net/devCorps?retryWrites=true&w=majority",
+  "jwtSecret": "secret"
 }

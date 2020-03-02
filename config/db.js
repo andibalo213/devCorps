@@ -12,7 +12,7 @@ const connectDB = async () => {
 
     //ASYNC/AWAIT , we have to use try catch when using async await as we need error handler when things fail
     try {
-        await mongoose.connect(db, { useNewUrlParser: true })
+        await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
         console.log('db conencted')
     } catch (error) {
         console.log(error)
