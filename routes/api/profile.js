@@ -4,6 +4,8 @@ const auth = require("../../middleware/auth");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
 const { check, validationResult } = require("express-validator");
+const config = require('config')
+const request = require('request')
 
 //@path   GET /api/profile/me
 //@desc   get current user  profile
@@ -398,5 +400,44 @@ router.delete("/education/:education_id", auth, async (req, res) => {
     }
 });
 
+//@path   GET /api/profile/github/:username
+//@desc   get user github repos
+//@acess  public
+
+//IN THIS ROUTE we set our app route to vew user github repos
+//but in this route we make a request to another web app using the request plugin
+router.get('/github/:username', (req, res) => {
+
+    try {
+        const options = {
+            uri: `https://api.github.com/users/${
+                req.params.username
+                }/repos?per_page=5&sort=created:asc&client_id=${config.get(
+                    "githubClientId"
+                )}&client_secret=${config.get("githubSecret")}`,
+            method: "GET",
+            headers: { "user-agent": "node.js" }
+        }
+
+
+        request(options, (error, response, body) => {
+
+            if (error) {
+                console.log(error)
+            }
+
+            if (response.statusCode !== 200) {
+                return res.status(400).json({ msg: 'No github profile found' })
+            }
+
+            return res.json(JSON.parse(body))
+        })
+    } catch (error) {
+
+        console.log(error)
+
+        return res.status(500).send("server error")
+    }
+})
 
 module.exports = router;
