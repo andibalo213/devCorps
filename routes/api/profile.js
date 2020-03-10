@@ -300,4 +300,103 @@ router.delete("/experience/:experience_id", auth, async (req, res) => {
     }
 });
 
+//@path   PUT /api/profile/education
+//@desc   add profile education
+//@acess  private
+
+router.put(
+    "/education",
+    [
+        auth,
+        [
+            check("school", "school is required")
+                .not()
+                .isEmpty(),
+            check("degree", "degree is required")
+                .not()
+                .isEmpty(),
+            check("fieldofstudy", "fieldofstudy is required")
+                .not()
+                .isEmpty(),
+            check("from", "from date is required")
+                .not()
+                .isEmpty()
+        ]
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const {
+            school,
+            degree,
+            fieldofstudy,
+            from,
+            to,
+            current,
+            description
+        } = req.body;
+
+        const newEdu = {
+            school,
+            degree,
+            fieldofstudy,
+            from,
+            to,
+            current,
+            description
+        };
+
+        try {
+            const profile = await Profile.findOne({ user: req.user.id });
+
+            profile.education.unshift(newEdu);
+
+            await profile.save();
+
+            return res.json(profile);
+        } catch (error) {
+            console.log(error)
+            res.status(500).send("server error");
+        }
+    }
+);
+
+//@path   DELETE /api/profile/education/:education_id
+//@desc   delete user profile
+//@acess  private
+
+router.delete("/education/:education_id", auth, async (req, res) => {
+    try {
+        //we cannot do this because 1.expereince id is contained within array in profile.education
+        //2. findOne and remove will remove the whole document becuase it returns a document based on the selector/condition
+        //await Profile.findOneAndRemove({ _id: req.params.education_id });
+
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        const removeIndex = profile.education
+            .map(item => item.id) //map through profile exp array and create a new array containing only the id of each obj in the array
+            .indexOf(req.params.education_id); //return the index in the new array matching the id in the query param
+
+        //SPLICE METHOD
+        //used to add/remove items from array. 1st param is where to start in the array, 2nd param is how amny items to remove, consequently are items to insert
+        profile.education.splice(removeIndex, 1);
+
+        await profile.save()
+
+        return res.json(profile);
+    } catch (error) {
+        console.log(erro)
+        if (error.kind === "ObjectId") {
+            return res.status(400).send("the user education could not be found");
+        }
+
+        return res.status(500).send("server error");
+    }
+});
+
+
 module.exports = router;
