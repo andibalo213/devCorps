@@ -109,7 +109,7 @@ router.get('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
 
     try {
-
+        //WE USE ffind by if first instead of fineone and delete because we want to check if the post belongs to the current user first
         const post = await Post.findById(req.params.id)
 
         if (!post) {
@@ -136,4 +136,71 @@ router.delete('/:id', auth, async (req, res) => {
     }
 })
 
+
+//@path    PUT /api/posts/like/:id
+//@desc    like a post
+//@access  private
+
+router.put('/like/:id', auth, async (req, res) => {
+
+    try {
+
+        //we do no need to use new keyword to create instance/document of model as we are querying the model
+        //and returning the document and store it in post
+        //WE USE NEW KEYWORD IF DOCUMENT HAS NOT BEEN CREATED/EXISTED
+
+        //get post by post id
+        const post = await Post.findById(req.params.id)
+
+        //check if post has already been liked
+        if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+
+            return res.status(400).json({ msg: 'This post has already been liked' })
+        }
+
+        post.likes.unshift({ user: req.user.id })
+
+        await post.save()
+
+        res.json(post.likes)
+    } catch (error) {
+        console.log(error)
+
+        res.status(500).send("server error")
+    }
+
+})
+
+//@path    PUT /api/posts/unlike/:id
+//@desc    unlike a post
+//@access  private
+
+router.put('/unlike/:id', auth, async (req, res) => {
+
+    try {
+        //get post by post id
+        const post = await Post.findById(req.params.id)
+
+        //check if post has already been liked
+        if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
+
+            return res.status(400).json({ msg: 'This post has not been liked' })
+        }
+
+        //likes.map returns an array of user id and we get the index of user id that matches current user id (LOGGEDIN USER)
+        //we use that index to remove the user id from the array 
+        const removeIndex = post.likes.map(like => like.user).indexOf(req.user.id)
+
+        post.likes.splice(removeIndex, 1)
+
+        await post.save()
+
+        res.json(post.likes)
+    } catch (error) {
+        console.log(error)
+
+        res.status(500).send("server error")
+    }
+
+})
 module.exports = router;
