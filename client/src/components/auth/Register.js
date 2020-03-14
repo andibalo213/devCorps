@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { setAlert } from '../../actions/alert'
 
-const Register = () => {
+const Register = (props) => {
+
+    const { setAlert } = props
 
     const [formData, setFormData] = useState({
         name: "",
@@ -25,7 +29,9 @@ const Register = () => {
         e.preventDefault()
 
         if (password !== password2) {
-            console.log("passwords does not match")
+            //set alert receives arguments and dispacthes the action that is evaluated by reducer/rootreducer
+            //and reducer makes cahnges to the store state
+            setAlert("passwords does not match", "danger", 3000)
         } else {
             console.log(formData)
         }
@@ -71,4 +77,8 @@ const Register = () => {
     )
 }
 
-export default Register
+//1. In connect the first param is state from store/redux that is connected to this compoenent
+//2. second param are object of actions(functions) that are connected to this compo
+//3. by passing the action it is available to this compo(Register) as props so we can access it by passing
+//   props as argumen to this compo and accessing actions by props.action
+export default connect(null, { setAlert })(Register)
