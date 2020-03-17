@@ -8,7 +8,7 @@ const config = require('config')
 const bcrypt = require('bcryptjs')
 
 //@path   /api/auth
-//@desc   register user
+//@desc   return user
 //@acess  private
 
 //PROTECTED Route because it runs the auth middleware to check token first

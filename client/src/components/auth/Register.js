@@ -2,10 +2,10 @@ import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setAlert } from '../../actions/alert'
+import { register } from '../../actions/auth'
 
-const Register = (props) => {
+const Register = ({ setAlert, register }) => {
 
-    const { setAlert } = props
 
     const [formData, setFormData] = useState({
         name: "",
@@ -33,7 +33,7 @@ const Register = (props) => {
             //and reducer makes cahnges to the store state
             setAlert("passwords does not match", "danger", 3000)
         } else {
-            console.log(formData)
+            register(name, email, password)
         }
     }
     return (
@@ -42,7 +42,7 @@ const Register = (props) => {
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
             <form className="form" onSubmit={(e) => onSubmit(e)}>
                 <div className="form-group">
-                    <input type="text" placeholder="Name" name="name" value={name} onChange={(e) => onChange(e)} required />
+                    <input type="text" placeholder="Name" name="name" value={name} onChange={(e) => onChange(e)} />
                 </div>
                 <div className="form-group">
                     <input type="email" placeholder="Email Address" name="email" value={email} onChange={(e) => onChange(e)} />
@@ -55,7 +55,7 @@ const Register = (props) => {
                         type="password"
                         placeholder="Password"
                         name="password"
-                        minLength="6"
+
                         value={password} onChange={(e) => onChange(e)}
                     />
                 </div>
@@ -64,7 +64,7 @@ const Register = (props) => {
                         type="password"
                         placeholder="Confirm Password"
                         name="password2"
-                        minLength="6"
+
                         value={password2} onChange={(e) => onChange(e)}
                     />
                 </div>
@@ -81,4 +81,4 @@ const Register = (props) => {
 //2. second param are object of actions(functions) that are connected to this compo
 //3. by passing the action it is available to this compo(Register) as props so we can access it by passing
 //   props as argumen to this compo and accessing actions by props.action
-export default connect(null, { setAlert })(Register)
+export default connect(null, { setAlert, register })(Register)
