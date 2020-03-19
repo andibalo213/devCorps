@@ -1,7 +1,10 @@
 import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { login } from '../../actions/auth'
+import PropTypes from 'prop-types'
 
-const Login = () => {
+const Login = ({ login, isAuthenticated }) => {
 
     const [formData, setFormData] = useState({
         email: "",
@@ -22,10 +25,19 @@ const Login = () => {
 
         e.preventDefault()
 
-
+        login(email, password)
         console.log(formData)
-
     }
+
+    //SENDING USER TO DASHBOARD AFTER LOGIN/REGISTER
+    //after user login/register we send them to dashboard page using redirect in react router
+    //we do that by conenct this compo to the auth state and check if isAuthne state is true
+    //becase isAuthen is true if userr successfuly login/register or token is still inside local storage
+
+    if (isAuthenticated) {
+        return <Redirect to='/dashboard' />
+    }
+
     return (
         <Fragment>
             <h1 className="large text-primary">Sign In</h1>
@@ -56,4 +68,12 @@ const Login = () => {
     )
 }
 
-export default Login
+Login.propTypes = {
+    login: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
+}
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+export default connect(mapStateToProps, { login })(Login)

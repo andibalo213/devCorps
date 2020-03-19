@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { setAlert } from './alert'
-import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOADED, AUTH_ERROR } from './types'
+import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOADED, AUTH_ERROR, LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT } from './types'
 import setAuthToken from '../utils/setAuthToken'
 
 //STATELESS JWT
@@ -82,3 +82,65 @@ export const register = (name, email, password) => async dispatch => {
     }
 }
 
+//LOGIN USER
+export const login = (email, password) => async dispatch => {
+    //DISPATCH
+    //it is a function which sends action that contiains types and payload to the reducer to be evaluated
+
+    //SENDING DATA TO SERVER
+    //we must preapre our req header and req body as an obj to send to the server
+
+    const config = {
+        //when sending req haeder make sure the fields in haeder obj is wrapped in string
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    //DATA SENT to server must be in json format and stringified so we must wrap our fields in object
+    const body = JSON.stringify({ email, password })
+
+    try {
+
+        //by sending pst req to the backend route we recieve a resposne which is stored in a variable
+        //when sending data axios receives the body and config parameters
+        const res = await axios.post('api/auth', body, config)
+
+        //the response is an object and the data from backend is stored in res.data
+
+        console.log(res)
+
+        //API/USERS RETURNS OBJ WITH TOKEN FIELD  in res.data
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: res.data
+        })
+
+
+    } catch (error) {
+
+        //if error the backend will send back array of erros that will be stored in a variable
+        const errors = error.response.data.errors
+
+        //EVEN if we import another action function we still need to call dispatch on it so the setAlert func
+        //wil run and dispatch its own types to the reducer
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
+        }
+        //we lopp through the array while dispatching setAlert with each err msg
+        dispatch({
+            type: LOGIN_FAIL
+        })
+
+
+    }
+}
+
+//Logout / Clear Profile
+
+export const logout = () => dispatch => {
+
+    dispatch({
+        type: LOGOUT
+    })
+}
