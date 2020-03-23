@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { setAlert } from './alert'
-import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOADED, AUTH_ERROR, LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT } from './types'
+import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOADED, AUTH_ERROR, LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT, CLEAR_PROFILE } from './types'
 import setAuthToken from '../utils/setAuthToken'
 
 //STATELESS JWT
@@ -118,7 +118,7 @@ export const login = (email, password) => async dispatch => {
 
 
     } catch (error) {
-
+        console.log(error)
         //if error the backend will send back array of erros that will be stored in a variable
         const errors = error.response.data.errors
 
@@ -142,5 +142,9 @@ export const logout = () => dispatch => {
 
     dispatch({
         type: LOGOUT
+    })
+
+    dispatch({
+        type: CLEAR_PROFILE
     })
 }

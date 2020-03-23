@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { login } from '../../actions/auth'
 import PropTypes from 'prop-types'
+import { setAlert } from '../../actions/alert'
 
 const Login = ({ login, isAuthenticated }) => {
 
@@ -24,6 +25,7 @@ const Login = ({ login, isAuthenticated }) => {
     const onSubmit = (e) => {
 
         e.preventDefault()
+
 
         login(email, password)
         console.log(formData)
