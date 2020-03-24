@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_PROFILE, PROFILE_ERROR } from './types'
+import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE } from './types'
 import { setAlert } from '../actions/alert'
 
 export const getCurrentProfile = () => async dispatch => {
@@ -20,6 +20,7 @@ export const getCurrentProfile = () => async dispatch => {
     }
 }
 
+//CREATE/EDIT PROFILE
 export const createProfile = (formData, history, edit = false) => async dispatch => {
 
     try {
@@ -63,4 +64,80 @@ export const createProfile = (formData, history, edit = false) => async dispatch
         })
     }
 
+}
+
+export const addExperience = (formData, history) => async dispatch => {
+
+    try {
+        const config = {
+            headers: {
+                "Content-Type": 'application/json'
+            }
+        }
+
+        const res = await axios.put('api/profile/experience', formData, config)
+
+
+        //UPDATING A PORFILE
+        //when updating a profile we just want to get the returned modified data and update our state in client
+        //bcs the updating is alreday done in the backend
+        dispatch({
+            type: UPDATE_PROFILE,
+            payload: res.data
+        })
+
+        dispatch(setAlert('Experience Added', 'success'))
+
+        history.push('/dashboard')
+    } catch (error) {
+
+        const errors = error.response.data.errors
+
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
+        }
+
+        dispatch({
+            type: PROFILE_ERROR,
+            error: { msg: error.response.statusText, status: error.response.status }
+        })
+    }
+}
+
+export const addEducation = (formData, history) => async dispatch => {
+
+    try {
+        const config = {
+            headers: {
+                "Content-Type": 'application/json'
+            }
+        }
+
+        const res = await axios.put('api/profile/education', formData, config)
+
+
+        //UPDATING A PORFILE
+        //when updating a profile we just want to get the returned modified data and update our state in client
+        //bcs the updating is alreday done in the backend
+        dispatch({
+            type: UPDATE_PROFILE,
+            payload: res.data
+        })
+
+        dispatch(setAlert('Education Added', 'success'))
+
+        history.push('/dashboard')
+    } catch (error) {
+
+        const errors = error.response.data.errors
+
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
+        }
+
+        dispatch({
+            type: PROFILE_ERROR,
+            error: { msg: error.response.statusText, status: error.response.status }
+        })
+    }
 }

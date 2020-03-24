@@ -13,14 +13,16 @@ const request = require('request')
 
 router.get("/me", auth, async (req, res) => {
     try {
-        let profile = await Profile.findOne({ user: req.user.id }).populate(
-            "user",
-            ["name", "avatar"]
-        );
+        const profile = await Profile.findOne({
+            user: req.user.id
+        });
 
         if (!profile) {
-            return res.status(400).json({ msg: "User profile is not found" });
+            return res.status(400).json({ msg: 'There is no profile for this user' });
         }
+
+        // only populate from user document if profile exists
+        res.json(profile.populate('user', ['name', 'avatar']));
     } catch (error) {
         console.log(error.message);
 
