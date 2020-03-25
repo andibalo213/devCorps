@@ -1,15 +1,18 @@
 import React, { useEffect, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getCurrentProfile } from "../../actions/profile";
+import { getCurrentProfile, deleteAccount } from "../../actions/profile";
 import Spinner from "../layout/Spinner";
 import { Link } from "react-router-dom";
 import DashboardActions from "./DashboardActions";
+import Education from './Education'
+import Experience from './Experience'
 
 //In the dashboard route we want to load the current user profile into state on page load
 //we do that using useEffect hook and calling the getCurrentUser action
 //we connect this compo to the auth state to check if user is authenticated and profile state to get the current user profile
 const Dashboard = ({
+    deleteAccount,
     getCurrentProfile,
     auth: { user },
     profile: { profile, loading }
@@ -39,6 +42,11 @@ const Dashboard = ({
                 {profile ? (
                     <Fragment>
                         <DashboardActions />
+                        <Experience experience={profile.experience} />
+                        <Education education={profile.education} />
+                        <div className="my-2">
+                            <button className="btn btn-danger" onClick={e => deleteAccount()}><i className="fas fa-user-minus"></i> Delete My Account</button>
+                        </div>
                     </Fragment>
                 ) : (
                         <Fragment>
@@ -63,4 +71,4 @@ const mapStateToProps = state => ({
     profile: state.profile
 });
 
-export default connect(mapStateToProps, { getCurrentProfile })(Dashboard);
+export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(Dashboard);
