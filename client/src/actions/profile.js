@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, ACCOUNT_DELETED, CLEAR_PROFILE } from './types'
+import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, ACCOUNT_DELETED, CLEAR_PROFILE, GET_PROFILES, GET_REPOS } from './types'
 import { setAlert } from '../actions/alert'
 
 export const getCurrentProfile = () => async dispatch => {
@@ -12,6 +12,80 @@ export const getCurrentProfile = () => async dispatch => {
             payload: res.data
         })
 
+    } catch (error) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: error.response.statusText, status: error.response.status }
+        })
+    }
+}
+
+export const getAllProfiles = () => async dispatch => {
+
+    //We will run get all profile when we render the coresponding page
+
+    //erase the profile exisiting profile state before lloadng in the list of porfiles to profiles array
+    dispatch({
+        type: CLEAR_PROFILE
+    })
+    try {
+
+        //QUERYING MMULTIPLE DOCUMENTS AND STORING iN VARIABLE AS ARRAY
+        //in the backend round we find/query multiple documents, it will automatically be stored as array in a variable
+        const res = await axios.get('/api/profile')
+
+        dispatch({
+            type: GET_PROFILES,
+            payload: res.data
+        })
+    } catch (error) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: error.response.statusText, status: error.response.status }
+        })
+    }
+}
+
+export const getProfileById = userId => async dispatch => {
+
+    //We will run get all profile when we render the coresponding page
+
+    //erase the profile exisiting profile state before lloadng in the list of porfiles to profiles array
+    dispatch({
+        type: CLEAR_PROFILE
+    })
+    try {
+
+        const res = await axios.get(`/api/profile/user/${userId}`)
+
+        dispatch({
+            type: GET_PROFILE,
+            payload: res.data
+        })
+    } catch (error) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: error.response.statusText, status: error.response.status }
+        })
+    }
+}
+
+export const getGithubRepos = githubUsername => async dispatch => {
+
+    //We will run get all profile when we render the coresponding page
+
+    //erase the profile exisiting profile state before lloadng in the list of porfiles to profiles array
+    dispatch({
+        type: CLEAR_PROFILE
+    })
+    try {
+
+        const res = await axios.get(`/api/profile/github/${githubUsername}`)
+
+        dispatch({
+            type: GET_REPOS,
+            payload: res.data
+        })
     } catch (error) {
         dispatch({
             type: PROFILE_ERROR,

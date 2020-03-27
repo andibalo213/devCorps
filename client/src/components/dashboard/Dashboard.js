@@ -20,7 +20,7 @@ const Dashboard = ({
     //by passing an empty array as second arg we only run the useEffect funtion once
     useEffect(() => {
         getCurrentProfile();
-    }, []);
+    }, [getCurrentProfile]);
 
     //SHOW SPINNER WHEN DOCUMENT NOT READY
     //we will show spinner when the rbowser has not finished getting the profile data from dashboard

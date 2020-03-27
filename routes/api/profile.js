@@ -151,8 +151,16 @@ router.get("/", async (req, res) => {
         //populate is used to reference data from document in another collection to current document
         //in the current document we store an id refrencing another collection/model as a properti
         //when we call poopulate it will add on fields to the property containing the refrence id
-        const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+        const profiles = await Profile.find().populate("user", ["name", "avatar"])
 
+
+        if (!profiles) {
+            return res.status(400).json({ msg: "Profiles not found" })
+        }
+
+
+        //When we callpopulate on a document it automatically fills the field with 
+        //value as object with the fields we bring from another model
         return res.json(profiles);
     } catch (error) {
         console.log(error);
