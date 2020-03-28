@@ -88,7 +88,8 @@ router.post(
         //so we need to store it in the skills properties as array
 
         if (skills) {
-            profileFields.skills = skills.split(",").map(skill => skill.trim());
+            //we need to convert skills to string first because it is still type array of string
+            profileFields.skills = skills.toString().split(",").map(skill => skill.trim());
         }
 
         //Socials is obj in model so we save build socials obj first then save it in the schema

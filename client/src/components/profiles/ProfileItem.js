@@ -15,6 +15,10 @@ const ProfileItem = ({
         skills
     }
 }) => {
+
+    //We Create a button which directs to the route profile/:id that accepts prams
+    //we direct when the button is clicked by also passing the profile id to the param
+    //whcih will then be used in the user Profile page
     return (
         <div className="profile bg-light">
             <img src={avatar} alt="" className="round-img" />
