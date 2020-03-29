@@ -1,4 +1,4 @@
-import { GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE, GET_PROFILES, GET_REPOS } from '../actions/types'
+import { GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE, GET_PROFILES, GET_REPOS, NO_REPOS } from '../actions/types'
 
 const initialState = {
     profile: null, //store logged in user porfile and other user profile by id
@@ -38,7 +38,11 @@ export default function (state = initialState, action) {
                 error: payload,
                 loading: false
             }
-
+        case NO_REPOS:
+            return {
+                ...state,
+                repos: []
+            }
         case CLEAR_PROFILE:
             return {
                 ...state,

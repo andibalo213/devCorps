@@ -6,7 +6,7 @@ const User = require("../../models/User");
 const Post = require("../../models/Post");
 const { check, validationResult } = require("express-validator");
 const config = require('config')
-const request = require('request')
+const axios = require('axios')
 
 //@path   GET /api/profile/me
 //@desc   get current user  profile
@@ -403,7 +403,7 @@ router.delete("/education/:education_id", auth, async (req, res) => {
 
         return res.json(profile);
     } catch (error) {
-        console.log(erro)
+        console.log(error)
         if (error.kind === "ObjectId") {
             return res.status(400).send("the user education could not be found");
         }
@@ -418,38 +418,22 @@ router.delete("/education/:education_id", auth, async (req, res) => {
 
 //IN THIS ROUTE we set our app route to vew user github repos
 //but in this route we make a request to another web app using the request plugin
-router.get('/github/:username', (req, res) => {
-
+router.get('/github/:username', async (req, res) => {
     try {
-        const options = {
-            uri: `https://api.github.com/users/${
-                req.params.username
-                }/repos?per_page=5&sort=created:asc&client_id=${config.get(
-                    "githubClientId"
-                )}&client_secret=${config.get("githubSecret")}`,
-            method: "GET",
-            headers: { "user-agent": "node.js" }
-        }
+        const uri = encodeURI(
+            `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
+        );
+        const headers = {
+            'user-agent': 'node.js',
+            Authorization: `token ${config.get('githubToken')}`
+        };
 
-
-        request(options, (error, response, body) => {
-
-            if (error) {
-                console.log(error)
-            }
-
-            if (response.statusCode !== 200) {
-                return res.status(400).json({ msg: 'No github profile found' })
-            }
-
-            return res.json(JSON.parse(body))
-        })
-    } catch (error) {
-
-        console.log(error)
-
-        return res.status(500).send("server error")
+        const gitHubResponse = await axios.get(uri, { headers });
+        return res.json(gitHubResponse.data);
+    } catch (err) {
+        console.error('github', err.message);
+        return res.status(404).json({ msg: 'No Github profile found' });
     }
-})
+});
 
 module.exports = router;

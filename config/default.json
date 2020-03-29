@@ -2,5 +2,6 @@
   "mongoURI": "mongodb+srv://andi:admin@cluster0-uxfva.mongodb.net/devCorps?retryWrites=true&w=majority",
   "jwtSecret": "secret",
   "githubClientId": "5eb51e032660aef398de",
-  "githubSecret": "6a3d1c2384043722a39cadae7127cef25dd8f6f0"
+  "githubSecret": "6a3d1c2384043722a39cadae7127cef25dd8f6f0",
+  "githubToken": "2d31a0f08db3079afb43e8a15034b5829a435cc8"
 }

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, ACCOUNT_DELETED, CLEAR_PROFILE, GET_PROFILES, GET_REPOS } from './types'
+import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, ACCOUNT_DELETED, CLEAR_PROFILE, GET_PROFILES, GET_REPOS, NO_REPOS } from './types'
 import { setAlert } from '../actions/alert'
 
 export const getCurrentProfile = () => async dispatch => {
@@ -75,9 +75,7 @@ export const getGithubRepos = githubUsername => async dispatch => {
     //We will run get all profile when we render the coresponding page
 
     //erase the profile exisiting profile state before lloadng in the list of porfiles to profiles array
-    dispatch({
-        type: CLEAR_PROFILE
-    })
+
     try {
 
         const res = await axios.get(`/api/profile/github/${githubUsername}`)
@@ -88,7 +86,7 @@ export const getGithubRepos = githubUsername => async dispatch => {
         })
     } catch (error) {
         dispatch({
-            type: PROFILE_ERROR,
+            type: NO_REPOS,
             payload: { msg: error.response.statusText, status: error.response.status }
         })
     }
