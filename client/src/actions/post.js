@@ -1,4 +1,4 @@
-import { GET_POSTS, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST } from './types'
+import { GET_POSTS, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST, GET_POST } from './types'
 import axios from 'axios'
 import { setAlert } from './alert'
 
@@ -78,14 +78,14 @@ export const removePost = postId => async dispatch => {
 }
 
 export const addPost = formData => async dispatch => {
-    try {
 
-        const config = {
-            header: {
-                'Content-Type': 'application/json'
-            }
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
         }
+    }
 
+    try {
         const res = await axios.post('/api/posts', formData, config)
 
         dispatch({
@@ -94,6 +94,24 @@ export const addPost = formData => async dispatch => {
         })
 
         dispatch(setAlert('Post Created', 'success'))
+
+    } catch (error) {
+        dispatch({
+            type: POST_ERROR,
+            payload: { msg: error.response.statusText, status: error.response.status }
+        })
+    }
+}
+
+export const getPost = postId => async dispatch => {
+
+    try {
+        const res = await axios.get(`/api/posts/${postId}`)
+
+        dispatch({
+            type: GET_POST,
+            payload: res.data
+        })
 
     } catch (error) {
         dispatch({
