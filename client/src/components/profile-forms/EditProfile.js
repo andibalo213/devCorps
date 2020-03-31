@@ -52,11 +52,11 @@ const EditProfile = ({ profile: { profile, loading }, createProfile, getCurrentP
             bio: loading || !profile.bio ? '' : profile.bio,
             githubusername: loading || !profile.githubusername ? '' : profile.githubusername,
             skills: loading || !profile.skills ? '' : profile.skills,
-            youtube: loading || !profile.youtube ? '' : profile.youtube,
-            twitter: loading || !profile.twitter ? '' : profile.twitter,
-            facebook: loading || !profile.facebook ? '' : profile.facebook,
-            linkedin: loading || !profile.linkedin ? '' : profile.linkedin,
-            instagram: loading || !profile.instagram ? '' : profile.instagram,
+            youtube: loading || !profile.social.youtube ? '' : profile.social.youtube,
+            twitter: loading || !profile.social.twitter ? '' : profile.social.twitter,
+            facebook: loading || !profile.social.facebook ? '' : profile.social.facebook,
+            linkedin: loading || !profile.social.linkedin ? '' : profile.social.linkedin,
+            instagram: loading || !profile.social.instagram ? '' : profile.social.instagram,
         })
 
     }, [loading])
