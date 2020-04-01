@@ -35,6 +35,7 @@ router.get("/me", auth, async (req, res) => {
 //@desc   create/update user profile
 //@acess  private
 
+
 router.post(
     "/",
     [
@@ -110,11 +111,13 @@ router.post(
             let profile = await Profile.findOne({ user: req.user.id });
 
             if (profile) {
+
                 //if profile exists update profile
                 profile = await Profile.findOneAndUpdate(
                     { user: req.user.id }, //find a profile document with the user id and return the document matching the condition
                     { $set: profileFields }, // with the return value as document, set the return document fields with the profileFields obj
-                    { new: true } //new true returns the modified document
+                    { new: true, upsert: true } //new true returns the modified document
+                    // Using upsert option (creates new doc if no match is found):
                 );
 
                 return res.json(profile);
