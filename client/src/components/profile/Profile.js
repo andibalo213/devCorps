@@ -9,7 +9,7 @@ import ProfileAbout from "./ProfileAbout";
 import ProfileExperience from './ProfileExperience'
 import ProfileEducation from './ProfileEducation'
 import ProfileGithub from './ProfileGithub'
-import Experience from "../dashboard/Experience";
+
 
 
 const Profile = ({
