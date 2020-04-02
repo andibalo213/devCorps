@@ -116,6 +116,8 @@ export const login = (email, password) => async dispatch => {
             payload: res.data
         })
 
+        dispatch(loadUser())
+
 
     } catch (error) {
         console.log(error)
